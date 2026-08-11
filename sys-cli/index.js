@@ -68,4 +68,3 @@ args.forEach((element) => {
             break;
     }
 });
-//# sourceMappingURL=index.js.map

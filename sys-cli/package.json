@@ -1,22 +1,18 @@
 {
-  "name": "sys-cli",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "bin": {
-    "codevolution": "index.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "type": "module",
-  "dependencies": {
-    "commander": "^15.0.0"
-  },
   "devDependencies": {
-    "@types/node": "^26.2.0"
+    "@babel/core": "^8.0.1",
+    "@babel/preset-env": "^8.0.2",
+    "@babel/preset-typescript": "^8.0.1",
+    "@jest/globals": "^30.4.1",
+    "@types/node": "^26.1.2",
+    "babel-jest": "^30.4.1",
+    "jest": "^30.4.2",
+    "tsx": "^4.23.6"
+  },
+  "scripts": {
+    "test": "jest",
+    "help": "tsc && node index.js --help",
+    "dev": "tsc && node index.js"
   }
 }
