@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "module": "ES2022",
+    "target": "ES2022",
+    "types": ["node", "jest"],
+    "esModuleInterop": true
+  },
+  "exclude": ["node_modules", "jest.config.ts", "*.test.*"]
+}
