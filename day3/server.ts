@@ -1,97 +1,99 @@
-import { error } from "node:console";
 import http from "node:http";
 
 export type Task = {
-    id: number;
-    content: string;
-    progress: "To Do" | "In Progress" | "Completed";
+  id: number;
+  content: string;
+  progress: "To Do" | "In Progress" | "Completed";
 };
 
 export type TaskResponseJSON = {
-    payload: Task[];
-    _id: number;
+  payload: Task[];
+  _id: number;
 };
 
 export const tasks: TaskResponseJSON = {
-    payload: [],
-    _id: 0,
+  payload: [],
+  _id: 0,
 };
 
 interface Message {
-    message: string;
+  message: string;
 }
 
-export class HTTPError extends Error{
-    statusCode: number;
-    constructor(message: string, statusCode: number){
-        super(message);
-        this.statusCode = statusCode;
-    }
+export class HTTPError extends Error {
+  statusCode: number;
+  constructor(message: string, statusCode: number) {
+    super(message);
+    this.statusCode = statusCode;
+  }
 }
 
 type Method = "GET" | "POST" | "PATCH" | "DELETE";
 
-export function getTasks(id: number){
-    const task = tasks.payload.find((each) => each.id === id);
-    if(!task){
-        throw new HTTPError("Invalid id", 400);
-    }
-    return task;
-
+export function getTasks(id: number) {
+  const task = tasks.payload.find((each) => each.id === id);
+  if (!task) {
+    throw new HTTPError("Invalid id", 400);
+  }
+  return task;
 }
 
-export function addTask(body: string): Message{
-    if(body === ""){
-        throw new HTTPError("Invalid input", 400);
-    }
-    let requestBody: Partial<Task>;
-    try{
-        requestBody = JSON.parse(body);
-    }catch(err){
-        throw new HTTPError("Invalid input", 400);
-    }
-    const content = requestBody.content ?? "";
-    if(content === ""){
-        throw new HTTPError("Invalid input", 400);
-    }
-    const id = ++tasks._id;
-    const task: Task = {
-        id: id,
-        content: content,
-        progress: "To Do",
-    };
-    tasks.payload = [...tasks.payload, task];
-    return {message: "Task Added"};
+export function addTasks(body: string): Message {
+  if (body === "") {
+    throw new HTTPError("Invalid input", 400);
+  }
+  let requestBody: Partial<Task>;
+  try {
+    requestBody = JSON.parse(body);
+  } catch (err) {
+    throw new HTTPError("Invalid input", 400);
+  }
+  const content = requestBody.content ?? "";
+  if (content === "") {
+    throw new HTTPError("Invalid input", 400);
+  }
+  const id = ++tasks._id;
+  const task: Task = {
+    id: id,
+    content: content,
+    progress: "To Do",
+  };
+  tasks.payload = [...tasks.payload, task];
+  return { message: "Task Added" };
 }
 
-export function updateTask(body: string, id: number): Message{
-    let data: Partial<Task>;
-    try{
-        data = JSON.parse(body);
-    }catch(err){
-        throw new HTTPError("Invalid input", 400);
-    }
-    const {content, progress} = data;
-    const task = tasks.payload.find((each) => each.id === id);
-    if(!task){
-        throw new HTTPError("Invalid input, id not provided", 400);
-    }
-    task.content = content ?? task.content;
-    task.progress = progress ?? task.progress;
+export function updateTask(body: string, id: number): Message {
+  let data: Partial<Task>;
+  try {
+    data = JSON.parse(body);
+  } catch (err) {
+    throw new HTTPError("Invalid input", 400);
+  }
+  const { content, progress } = data;
+  const task = tasks.payload.find((each) => each.id === id);
+  if (!task) {
+    throw new HTTPError("Invalid input, id not provided", 400);
+  }
+  task.content = content ?? task.content;
+  task.progress = progress ?? task.progress;
 
-    return{ message: `Task of id: ${id} was updated` }
+  return { message: `Task of id: ${id} was updated` };
 }
 
-export function deleteTask(id: number): Message{
-    tasks.payload = tasks.payload.filter((each) => each.id !== id);
-    return {message: `Task of id: ${id} was deleted `};
+export function deleteTask(id: number): Message {
+  tasks.payload = tasks.payload.filter((each) => each.id !== id);
+  return { message: `Task of id: ${id} was deleted` };
 }
 
-export function handleRequest(method: Method, url: string, body: string,): TaskResponseJSON | Message | Task {
+export function handleRequest(
+  method: Method,
+  url: string,
+  body: string,
+): TaskResponseJSON | Message | Task {
   const regex = /^\/tasks\/(?<id>[0-9]+)\/?$/;
   if (url === "/tasks") {
     if (method === "POST") {
-      return addTask(body);
+      return addTasks(body);
     }
     if (method === "GET") {
       return tasks;
