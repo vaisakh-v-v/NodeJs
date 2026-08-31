@@ -1,0 +1,13 @@
+import { Router } from "express";
+import { handleAssignTicket, handleCreateTicket, handleDeleteTicket, handleUpdateStatus, handleViewTicket, handleListTickets } from "./controller.ts";
+
+
+const router = Router();
+
+router.get("/", handleListTickets);
+router.post("/", handleCreateTicket);
+router.get("./:id", handleViewTicket);
+router.patch("/:id/status", handleUpdateStatus);
+router.patch("/:id/assignee", handleAssignTicket);
+router.delete("/:id", handleDeleteTicket);
+export default router;
